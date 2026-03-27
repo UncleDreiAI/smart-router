@@ -1,0 +1,48 @@
+{
+  "name": "smart-router-openclaw",
+  "version": "1.0.0",
+  "description": "Smart Router provider plugin for OpenClaw - intelligent L0/L1/L2 model routing with automatic cost optimization",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/",
+    "openclaw.plugin.json",
+    "README.md",
+    "install.sh"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "node dist/test.js",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "openclaw",
+    "openclaw-plugin",
+    "model-router",
+    "cost-optimization",
+    "llm-routing",
+    "smart-router"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/smart-router-openclaw.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/smart-router-openclaw/issues"
+  },
+  "homepage": "https://github.com/yourusername/smart-router-openclaw#readme",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "openclaw": {
+    "extensions": ["./dist/index.js"]
+  }
+}

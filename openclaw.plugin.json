@@ -1,0 +1,32 @@
+{
+  "id": "smart-router-openclaw",
+  "name": "Smart Router",
+  "description": "Intelligently routes requests to L0/L1/L2 models based on query complexity. Saves ~50% on typical usage.",
+  "version": "1.0.0",
+  "configSchema": {
+    "type": "object",
+    "properties": {
+      "defaultTier": {
+        "type": "string",
+        "enum": ["L0", "L1", "L2"],
+        "default": "L1",
+        "description": "Default tier when classification is uncertain"
+      },
+      "l0Threshold": {
+        "type": "number",
+        "default": 20,
+        "description": "Character threshold for L0 classification"
+      },
+      "l2Threshold": {
+        "type": "number",
+        "default": 500,
+        "description": "Character threshold for L2 classification"
+      },
+      "enableBudgetTracking": {
+        "type": "boolean",
+        "default": true,
+        "description": "Enable budget tracking integration"
+      }
+    }
+  }
+}
