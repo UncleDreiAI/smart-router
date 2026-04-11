@@ -7,10 +7,10 @@
 
 const path = require('path');
 
-// SECURITY: Use absolute path to prevent directory traversal
-const DISPATCHER_PATH = path.resolve(__dirname, '..', '..', 'agents', 'router', 'dispatcher.js');
-const BUDGET_PATH = path.resolve(__dirname, '..', '..', 'agents', 'router', 'budget.js');
-const TRACKER_PATH = path.resolve(__dirname, '..', '..', 'agents', 'router', 'budget-tracker.js');
+// SECURITY: Use paths within the skill directory for portability
+const DISPATCHER_PATH = path.resolve(__dirname, 'lib', 'dispatcher.js');
+const BUDGET_PATH = path.resolve(__dirname, 'lib', 'budget.js');
+const TRACKER_PATH = path.resolve(__dirname, 'lib', 'budget-tracker.js');
 
 // SECURITY: Input validation limits
 const MAX_MESSAGE_LENGTH = 4000;  // Prevent memory exhaustion

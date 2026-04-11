@@ -1,0 +1,27 @@
+{
+  "L0": {
+    "patterns": [
+      "^(ok|okay|thanks|thank you|yes|no|cool|nice|👍|🙏)$",
+      "^(hi|hello|hey|hola|sup|yo)$",
+      "^(status|ping|alive\\?|up\\?)$",
+      "^(weather|temp|temperature)$",
+      "^(stop|cancel|halt|pause|resume)$",
+      "\\b(what time is it|the date|today's date)\\b",
+      "\\b(set a timer|set an alarm|remind me)\\b",
+      "\\b(how are you|how's it going|what's up)\\b",
+      "\\b(clear|reset|delete this|remove that)\\b"
+    ],
+    "max_length": 15
+  },
+  "L2": {
+    "patterns": [
+      "\\b(design|architect|structure|refactor|optimize|review|audit)\\b",
+      "\\b(explain|deep dive|analyze|compare|contrast|logic|theological)\\b",
+      "\\b(debug|troubleshoot|fix the error|trace|stack trace)\\b",
+      "\\b(soul|philosophy|theology|god|apologetics|existence)\\b",
+      "```[\\s\\S]+```",
+      "\\b(complex|difficult|tricky|technical|architecture|system)\\b"
+    ],
+    "min_length": 400
+  }
+}
