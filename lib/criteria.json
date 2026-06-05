@@ -15,12 +15,11 @@
   },
   "L2": {
     "patterns": [
-      "\\b(design|architect|structure|refactor|optimize|review|audit)\\b",
+      "\\b(design|architect|structure|strategy|planning)\\b",
       "\\b(explain|deep dive|analyze|compare|contrast|logic|theological)\\b",
-      "\\b(debug|troubleshoot|fix the error|trace|stack trace)\\b",
-      "\\b(soul|philosophy|theology|god|apologetics|existence)\\b",
-      "```[\\s\\S]+```",
-      "\\b(complex|difficult|tricky|technical|architecture|system)\\b"
+      "\\b(soul|philosophy|theology|god|apologetics|existence|meaning)\\b",
+      "\\b(complex|difficult|tricky|nuanced|multi-faceted)\\b",
+      "\\b(synthesize|evaluate|critique|assess|review comprehensively)\\b"
     ],
     "min_length": 400
   }
