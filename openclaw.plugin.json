@@ -1,0 +1,67 @@
+{
+  "id": "smart-router-openclaw",
+  "name": "Smart Router",
+  "description": "Local-first tiered routing: prefers local ollama models, escalates coding/complex queries to cloud. Saves ~50%+ on typical usage.",
+  "version": "2.0.0",
+  "configSchema": {
+    "type": "object",
+    "properties": {
+      "defaultTier": {
+        "type": "string",
+        "enum": ["LOCAL", "L0", "L1", "L2_DEV", "L2_GEN"],
+        "default": "L1",
+        "description": "Default tier for general conversation when no pattern matches"
+      },
+      "l0Threshold": {
+        "type": "number",
+        "default": 20,
+        "description": "Character threshold for L0 (local worker) classification (overrides criteria.json max_length)"
+      },
+      "l2Threshold": {
+        "type": "number",
+        "default": 500,
+        "description": "Character threshold for L2_GEN escalation (overrides criteria.json min_length)"
+      },
+      "enableBudgetTracking": {
+        "type": "boolean",
+        "default": true,
+        "description": "Enable budget tracking integration"
+      },
+      "enableLogging": {
+        "type": "boolean",
+        "default": true,
+        "description": "Print routing decisions to console"
+      },
+      "customLocalModel": {
+        "type": "string",
+        "description": "Override the LOCAL judge model (default ollama/phi4-mini)"
+      },
+      "customL0Model": {
+        "type": "string",
+        "description": "Override the L0 local worker model (default ollama/gemma3:4b)"
+      },
+      "customL1Model": {
+        "type": "string",
+        "description": "Override the L1 conversational model (default openai/gpt-5.4-nano)"
+      },
+      "customDevModel": {
+        "type": "string",
+        "description": "Override the L2_DEV coding model (default openai/gpt-5.3-codex)"
+      },
+      "customGenModel": {
+        "type": "string",
+        "description": "Override the L2_GEN reasoning model (default openai/gpt-5.5)"
+      },
+      "maxExpensivePercentage": {
+        "type": "number",
+        "default": 30,
+        "description": "Max % of requests allowed on the throttled cloud tier (L2_GEN) per hour. >=100 disables the cap. Over-budget requests downgrade to local L0."
+      },
+      "expensiveCooldownMs": {
+        "type": "number",
+        "default": 5000,
+        "description": "Minimum milliseconds between L2_GEN requests. 0 disables the cooldown."
+      }
+    }
+  }
+}
