@@ -1,26 +1,38 @@
 {
+  "L2_DEV": {
+    "patterns": [
+      "```[\\s\\S]+```",
+      "\\b(javascript|typescript|python|react|node|npm|git|bash|sql|docker)\\b",
+      "\\b(debug|refactor|stack trace|race condition|deadlock|compile)\\b",
+      "\\b(write|create|build|implement|code|script|function|class)\\b.*\\b(code|script|function|program|app|system|api)\\b"
+    ]
+  },
+  "L2_GEN": {
+    "patterns": [
+      "\\b(design|architect|analyze|compare|evaluate|synthesize)\\b",
+      "\\b(complex|scalability|tradeoff|reasoning|theorem)\\b",
+      "\\b(soul|philosophy|theology|god|apologetics|existence|meaning)\\b",
+      "\\b(explain|deep dive|analyze|compare|contrast|logic|theological|ontological|cosmological|teleological|moral)\\b"
+    ],
+    "min_length": 500
+  },
+  "LOCAL": {
+    "patterns": [
+      "\\b(summarize|tldr|recap)\\b",
+      "\\b(draft|reply to|compose).{0,20}\\b(email|message)\\b",
+      "\\b(proofread|rewrite|rephrase|translate|format)\\b",
+      "\\b(weather|temp|temperature)\\b",
+      "\\b(what time is it|the date|today's date)\\b",
+      "\\b(set a timer|set an alarm|remind me)\\b"
+    ]
+  },
   "L0": {
     "patterns": [
       "^(ok|okay|thanks|thank you|yes|no|cool|nice|👍|🙏)$",
-      "^(hi|hello|hey|hola|sup|yo)$",
-      "^(status|ping|alive\\?|up\\?)$",
-      "^(weather|temp|temperature)$",
-      "^(stop|cancel|halt|pause|resume)$",
-      "\\b(what time is it|the date|today's date)\\b",
-      "\\b(set a timer|set an alarm|remind me)\\b",
-      "\\b(how are you|how's it going|what's up)\\b",
-      "\\b(clear|reset|delete this|remove that)\\b"
+      "^(hi|hello|hey|sup|yo)$",
+      "^(status|ping|test|pong)$",
+      "^(stop|cancel|halt|pause|resume)$"
     ],
-    "max_length": 15
-  },
-  "L2": {
-    "patterns": [
-      "\\b(design|architect|structure|strategy|planning)\\b",
-      "\\b(explain|deep dive|analyze|compare|contrast|logic|theological)\\b",
-      "\\b(soul|philosophy|theology|god|apologetics|existence|meaning)\\b",
-      "\\b(complex|difficult|tricky|nuanced|multi-faceted)\\b",
-      "\\b(synthesize|evaluate|critique|assess|review comprehensively)\\b"
-    ],
-    "min_length": 400
+    "max_length": 20
   }
 }

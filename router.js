@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Smart Router - Secured Main Entry Point
- * Routes incoming messages to L0/L1/L2 based on complexity analysis
+ * Smart Router - Secured Main Entry Point (v2.0 Local-First)
+ * Routes incoming messages to LOCAL/L0/L1/L2_DEV/L2_GEN based on complexity analysis
  * Security: Input validation, path safety, sanitized logging
  */
 
@@ -14,7 +14,7 @@ const TRACKER_PATH = path.resolve(__dirname, 'lib', 'budget-tracker.js');
 
 // SECURITY: Input validation limits
 const MAX_MESSAGE_LENGTH = 4000;  // Prevent memory exhaustion
-const ALLOWED_TIERS = ['L0', 'L1', 'L2', 'L2_DEV', 'L2_GEN', 'LOCAL'];
+const ALLOWED_TIERS = ['LOCAL', 'L0', 'L1', 'L2_DEV', 'L2_GEN'];
 
 // Load dispatcher and budget logic with error handling
 let classifyMessage, TIER_MODELS, UsageTracker, DailyBudgetTracker;
@@ -22,10 +22,10 @@ try {
   const dispatcher = require(DISPATCHER_PATH);
   classifyMessage = dispatcher.classifyMessage;
   TIER_MODELS = dispatcher.TIER_MODELS;
-  
+
   const budget = require(BUDGET_PATH);
   UsageTracker = budget.UsageTracker;
-  
+
   const trackerModule = require(TRACKER_PATH);
   DailyBudgetTracker = trackerModule.DailyBudgetTracker;
 } catch (err) {
@@ -40,18 +40,18 @@ const budgetTracker = new DailyBudgetTracker();
 // SECURITY: Sanitize message input
 function sanitizeInput(args) {
   if (!args || args.length === 0) return null;
-  
+
   // Join arguments and trim
   let message = args.join(' ').trim();
-  
+
   // Length limit
   if (message.length > MAX_MESSAGE_LENGTH) {
     message = message.substring(0, MAX_MESSAGE_LENGTH);
   }
-  
+
   // Remove null bytes and control chars (except newlines/tabs)
   message = message.replace(/[\x00-\x08\x0B-\x0C\x0E-\x1F]/g, '');
-  
+
   return message;
 }
 
@@ -61,7 +61,7 @@ function validateTier(result) {
     // Fallback to safe default
     return {
       tier: 'L1',
-      model: TIER_MODELS?.L1 || 'moonshot/kimi-k2.5',
+      model: TIER_MODELS?.L1 || 'openai/gpt-5.4-nano',
       confidence: 0.5,
       reason: 'Validation fallback',
       safe: true
@@ -73,23 +73,25 @@ function validateTier(result) {
 // Main entry point
 async function main() {
   const args = process.argv.slice(2);
-  
+
   // Test mode
   if (args.length === 0 || args[0] === '--test') {
-    console.log('Smart Router - Test Mode');
+    console.log('Smart Router v2.0 - Local-First Test Mode');
     console.log('Usage: smart-router "your message here"');
     console.log('');
-    
+
     const testMessages = [
       "ok",
       "thanks",
       "status",
+      "summarize my email",
       "explain why this code doesn't work",
       "design a routing system",
       "what's the weather?",
-      "help me write a script"
+      "help me write a script",
+      "deep dive into apologetics"
     ];
-    
+
     testMessages.forEach(msg => {
       const result = classifyMessage(msg);
       console.log(`"${msg}"`);
@@ -99,14 +101,14 @@ async function main() {
     });
     return;
   }
-  
+
   // SECURITY: Sanitize input
   const message = sanitizeInput(args);
   if (!message) {
     console.error(JSON.stringify({ error: 'No message provided', safe: true, tier: 'L1' }));
     process.exit(1);
   }
-  
+
   // Classify
   let result;
   try {
@@ -116,34 +118,35 @@ async function main() {
     console.error(JSON.stringify({ error: 'Classification failed', safe: true, tier: 'L1' }));
     process.exit(1);
   }
-  
-  // BUDGET PROTECTION: Check if L2 is allowed
-  if (result.tier === 'L2') {
-    const budgetCheck = tracker.checkL2Allowed();
+
+  // BUDGET PROTECTION: Check if expensive tier (L2_GEN) is allowed
+  // (check BEFORE recording so the current request doesn't count against itself)
+  if (result.tier === 'L2_GEN') {
+    const budgetCheck = tracker.checkExpensiveAllowed();
     if (!budgetCheck.allowed) {
-      // Downgrade to L1 if budget exceeded
+      // Downgrade to L0 (local) if budget exceeded
       result = {
-        tier: 'L1',
-        model: TIER_MODELS.L1,
-        confidence: 0.7,
-        reason: `Downgraded from L2: ${budgetCheck.reason}`,
+        tier: 'L0',
+        model: TIER_MODELS.L0,
+        confidence: 0.6,
+        reason: `Downgraded from L2_GEN: ${budgetCheck.reason}`,
         budgetLimited: true
       };
     }
   }
-  
-  // Record this request
+
+  // Record this request (after any downgrade)
   tracker.record(result.tier);
-  
-  // Get budget status for L2
-  const budgetStatus = tracker.checkL2Allowed();
-  
+
+  // Get budget status for expensive tier
+  const budgetStatus = tracker.checkExpensiveAllowed();
+
   // LOG TO DAILY BUDGET (for reporting)
   // Estimate tokens: 1 token ≈ 4 chars for English text
   const estimatedInputTokens = Math.ceil(message.length / 4);
   const estimatedOutputTokens = Math.ceil(estimatedInputTokens * 1.5); // Estimate response size
   budgetTracker.logRequest(result.tier, result.model, estimatedInputTokens, estimatedOutputTokens);
-  
+
   // SECURITY: Sanitized output (no full message content logged)
   const output = {
     tier: result.tier,
@@ -156,12 +159,12 @@ async function main() {
     messagePreview: message.substring(0, 20).replace(/[\x00-\x1F]/g, '?'),
     // Budget info
     budget: {
-      l2Percentage: parseFloat(budgetStatus.l2Percentage),
-      l2Allowed: budgetStatus.allowed,
+      expensivePercentage: parseFloat(budgetStatus.expensivePercentage),
+      expensiveAllowed: budgetStatus.allowed,
       downgraded: result.budgetLimited || false
     }
   };
-  
+
   console.log(JSON.stringify(output));
 }
 
