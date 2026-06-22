@@ -14,7 +14,7 @@ const TRACKER_PATH = path.resolve(__dirname, 'lib', 'budget-tracker.js');
 
 // SECURITY: Input validation limits
 const MAX_MESSAGE_LENGTH = 4000;  // Prevent memory exhaustion
-const ALLOWED_TIERS = ['L0', 'L1', 'L2'];
+const ALLOWED_TIERS = ['L0', 'L1', 'L2', 'L2_DEV', 'L2_GEN', 'LOCAL'];
 
 // Load dispatcher and budget logic with error handling
 let classifyMessage, TIER_MODELS, UsageTracker, DailyBudgetTracker;
